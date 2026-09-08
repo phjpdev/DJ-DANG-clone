@@ -156,6 +156,176 @@
     });
   }
 
+  /* ----------------------------------------------------- heading anchors */
+
+  /**
+   * Content headings carry the original site's anchor ids (id="h.…").
+   * Hovering a heading reveals a link icon; clicking it copies the heading's
+   * URL and shows a "Copied to clipboard" toast with view / dismiss actions.
+   */
+  function initHeadingAnchors() {
+    var heads = $$('#main [id^="h."]');
+    if (!heads.length) return;
+
+    var toast = null;
+    var toastTimer = null;
+
+    function hideToast() {
+      if (toast) toast.hidden = true;
+      window.clearTimeout(toastTimer);
+    }
+
+    function showToast(anchorId) {
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.className = "toast";
+        toast.setAttribute("role", "status");
+        toast.innerHTML =
+          '<span>Copied to clipboard</span>' +
+          '<a href="#" data-view>view</a>' +
+          '<button type="button" aria-label="Dismiss">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+                 'stroke-linecap="round">' +
+              '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' +
+            '</svg>' +
+          '</button>';
+        document.body.appendChild(toast);
+        on($("button", toast), "click", hideToast);
+        on($("[data-view]", toast), "click", function () { hideToast(); });
+      }
+      $("[data-view]", toast).setAttribute("href", "#" + anchorId);
+      toast.hidden = false;
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(hideToast, 5000);
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text).catch(function () { legacyCopy(text); });
+      }
+      legacyCopy(text);
+      return Promise.resolve();
+    }
+
+    function legacyCopy(text) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) { /* nothing more to try */ }
+      document.body.removeChild(ta);
+    }
+
+    heads.forEach(function (h) {
+      var btn = document.createElement("button");
+      btn.className = "hlink";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Copy heading link");
+      btn.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+          '<path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4' +
+                  'v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 ' +
+                  '3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>' +
+        '</svg>';
+      h.appendChild(btn);
+
+      on(btn, "click", function () {
+        var url = window.location.href.split("#")[0] + "#" + h.id;
+        copyText(url).then(function () { showToast(h.id); });
+      });
+    });
+  }
+
+  /* ------------------------------------------------------ search overlay */
+
+  /**
+   * The header magnifier opens an overlay on the current page — light bar
+   * across the top with a back arrow and a centered "Search this site" box,
+   * page dimmed underneath. Submitting navigates to the results page.
+   * The anchor's href (search.html) remains the no-JS fallback.
+   */
+  function initSearchOverlay() {
+    var triggers = $$(".icon-btn[aria-label='Search this site']");
+    if (!triggers.length) return;
+
+    var overlay = document.createElement("div");
+    overlay.className = "search-overlay";
+    overlay.hidden = true;
+    overlay.innerHTML =
+      '<div class="search-overlay-scrim"></div>' +
+      '<div class="search-overlay-bar">' +
+        '<button class="search-overlay-back" type="button" aria-label="Back">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+               'stroke-linecap="round" stroke-linejoin="round">' +
+            '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>' +
+          '</svg>' +
+        '</button>' +
+        '<form class="search-overlay-form" role="search">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+               'stroke-linecap="round" aria-hidden="true">' +
+            '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/>' +
+          '</svg>' +
+          '<input type="search" name="query" placeholder="Search this site" ' +
+                 'aria-label="Search this site" autocomplete="off" spellcheck="false">' +
+          '<button class="search-overlay-clear" type="button" aria-label="Clear search" hidden>' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+                 'stroke-linecap="round">' +
+              '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' +
+            '</svg>' +
+          '</button>' +
+        '</form>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    var input = $("input", overlay);
+    var form = $("form", overlay);
+    var clear = $(".search-overlay-clear", overlay);
+
+    on(input, "input", function () {
+      clear.hidden = input.value === "";
+    });
+
+    on(clear, "click", function () {
+      input.value = "";
+      clear.hidden = true;
+      input.focus();
+    });
+
+    function openOverlay() {
+      overlay.hidden = false;
+      document.body.style.overflow = "hidden";
+      input.focus();
+    }
+
+    function closeOverlay() {
+      overlay.hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    triggers.forEach(function (a) {
+      on(a, "click", function (e) {
+        e.preventDefault();
+        openOverlay();
+      });
+    });
+
+    on($(".search-overlay-back", overlay), "click", closeOverlay);
+    on($(".search-overlay-scrim", overlay), "click", closeOverlay);
+
+    on(document, "keydown", function (e) {
+      if (e.key === "Escape" && !overlay.hidden) closeOverlay();
+    });
+
+    on(form, "submit", function (e) {
+      e.preventDefault();
+      var q = input.value.trim();
+      window.location.href =
+        "search.html" + (q ? "?query=" + encodeURIComponent(q) + "&scope=site" : "");
+    });
+  }
+
   /* ------------------------------------------------- search highlighting */
 
   /**
@@ -352,6 +522,8 @@
     initNav();
     initStickyHeader();
     initActiveNav();
+    initHeadingAnchors();
+    initSearchOverlay();
     initHighlight();
     initForm();
     initYear();

@@ -12,6 +12,32 @@
   var SNIPPET = 165;      // characters either side of the match
   var MAX_RESULTS = 25;
 
+  /**
+   * No-results state, rendered inside the results card like the original:
+   * headline, grey flashlight illustration, and a hint line. The artwork is
+   * an original inline-SVG approximation of the site's raster graphic.
+   */
+  var NO_RESULTS_HTML =
+    '<div class="search-noresults">' +
+      '<h2>No results match your search</h2>' +
+      '<svg class="search-noresults-art" viewBox="0 0 200 200" aria-hidden="true">' +
+        '<defs><clipPath id="snrClip"><circle cx="100" cy="100" r="100"/></clipPath></defs>' +
+        '<circle cx="100" cy="100" r="100" fill="#d8d8d8"/>' +
+        '<g clip-path="url(#snrClip)">' +
+          '<path d="M100 0 A100 100 0 0 1 100 200 L100 100 Z" fill="#000" opacity="0.05"/>' +
+          '<polygon points="92,86 122,104 100,204 -8,138" fill="#fbfbfb"/>' +
+          '<g transform="rotate(38 96 66)">' +
+            '<rect x="46" y="52" width="50" height="22" rx="5" fill="#8f8f8f"/>' +
+            '<circle cx="60" cy="63" r="4" fill="#6f6f6f"/>' +
+            '<rect x="94" y="55" width="8" height="16" fill="#7c7c7c"/>' +
+            '<path d="M102 50 L122 42 L122 84 L102 76 Z" fill="#a3a3a3"/>' +
+            '<rect x="121" y="42" width="5" height="42" fill="#ffffff"/>' +
+          '</g>' +
+        '</g>' +
+      '</svg>' +
+      '<p>Check the spelling, or try a different search</p>' +
+    '</div>';
+
   function $(sel) { return document.querySelector(sel); }
 
   var form    = $("#searchForm");
@@ -116,7 +142,7 @@
 
     if (!q) {
       card.hidden = true;
-      empty.hidden = true;
+      if (empty) empty.hidden = true;
       list.innerHTML = "";
       return;
     }
@@ -125,14 +151,13 @@
     var hits = search(q);
 
     if (!hits.length) {
-      card.hidden = true;
-      empty.hidden = false;
-      empty.textContent = 'No results found for "' + q + '".';
-      list.innerHTML = "";
+      if (empty) empty.hidden = true;
+      card.hidden = false;
+      list.innerHTML = NO_RESULTS_HTML;
       return;
     }
 
-    empty.hidden = true;
+    if (empty) empty.hidden = true;
     card.hidden = false;
 
     list.innerHTML = hits.map(function (page) {

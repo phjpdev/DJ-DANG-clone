@@ -59,14 +59,22 @@
     </div>
   </section>
 
-  <!-- ================================================== 2. spacer -->
-  <section class="section section--spacer" aria-hidden="true">
-    <div class="section-cell"><div class="wrap"><div class="col"></div></div></div>
+  <!-- ================================================== 2. divider -->
+  <section class="section section--spacer">
+    <div class="section-cell">
+      <div class="wrap">
+        <div class="col"><div class="divider" role="presentation"></div></div>
+      </div>
+    </div>
   </section>
 
-  <!-- ================================================== 3. spacer -->
-  <section class="section section--spacer" aria-hidden="true">
-    <div class="section-cell"><div class="wrap"><div class="col"></div></div></div>
+  <!-- ================================================== 3. divider -->
+  <section class="section section--spacer">
+    <div class="section-cell">
+      <div class="wrap">
+        <div class="col"><div class="divider" role="presentation"></div></div>
+      </div>
+    </div>
   </section>
 
   <!-- ==================================================== 4. intro -->
@@ -86,15 +94,13 @@
     </div>
   </section>
 
-  <!-- ========================================= 5. details (+ form) -->
+  <!-- ============================================ 5. map + details -->
   <section class="section">
     <div class="section-cell">
-      <div class="wrap wrap--2">
+      <div class="wrap wrap--13">
 
-        <!-- Google Maps embed, exactly as the live site: left column of the
-             contact row, same src. -->
         <div class="col">
-          <div class="map-embed">
+          <div class="map-embed map-embed--tall">
             <iframe title="Map, Fredericksburg" loading="lazy" allowfullscreen
               referrerpolicy="no-referrer-when-downgrade"
               src="https://maps-api-ssl.google.com/maps?hl=en-US&amp;ll=38.298304,-77.489906&amp;output=embed&amp;q=Fredericksburg,+VA+22401,+USA+(Fredericksburg)&amp;z=12"></iframe>
@@ -102,96 +108,24 @@
         </div>
 
         <div class="col">
-          <p class="p t12 lh138 left"><b>PHONE: (703) 791 - 9598</b></p>
-          <p class="p t12 lh138 left"><b>FAX: (571) 556 - 5654</b></p>
-          <p class="p t12 lh138 left"><b>EMAIL: DANGASSOCIATESLLC@GMAIL.COM</b></p>
-          <p class="p t12 lh138 left"><b>ADDRESS: 10908 COURTHOUSE RD #102/137 | FREDERICKSBURG, VA 22408</b></p>
+          <p class="p t12 lh138 left cline"><span class="lbl">PHONE:</span><span class="val">(703) 791 - 9598</span></p>
+          <p class="p t12 lh138 left cline"><span class="lbl">FAX:</span><span class="val">&nbsp;(571) 556 - 5654</span></p>
+          <p class="p t12 lh138 left cline"><span class="lbl">EMAIL:</span><span class="val"><a href="mailto:DANGASSOCIATESLLC@GMAIL.COM">DANGASSOCIATESLLC@GMAIL.COM</a></span></p>
+          <p class="p t12 lh138 left cline"><span class="lbl">ADDRESS:</span><span class="val">10908 COURTHOUSE RD #102/137 | FREDERICKSBURG, VA 22408</span></p>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- ================================================== 6. spacer -->
-  <section class="section section--spacer" aria-hidden="true">
-    <div class="section-cell"><div class="wrap"><div class="col"></div></div></div>
-  </section>
-
-  <!-- OPTIONAL ADDITION — not on the live site.
-       Delete this whole <section> (down to END OPTIONAL ADDITION)
-       for a pure 1:1 clone. -->
-  <section class="section">
+  <!-- ================================================== 6. divider -->
+  <section class="section section--spacer">
     <div class="section-cell">
-      <div class="wrap wrap--2">
-        <div class="col">
-          <h2 class="h2">Request a Consultation</h2>
-          <form class="form" id="contactForm" novalidate>
-            <div class="hp-field" aria-hidden="true">
-              <label for="company">Company</label>
-              <input class="hp-input" type="text" id="company" name="company" tabindex="-1" autocomplete="off">
-            </div>
-
-            <div class="form-field">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" autocomplete="name" data-label="Name" required>
-              <span class="field-error" aria-live="polite"></span>
-            </div>
-
-            <div class="form-field">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" autocomplete="email" data-label="Email" required>
-              <span class="field-error" aria-live="polite"></span>
-            </div>
-
-            <div class="form-field">
-              <label for="phone">Phone</label>
-              <input type="tel" id="phone" name="phone" autocomplete="tel" data-label="Phone">
-              <span class="field-error" aria-live="polite"></span>
-            </div>
-
-            <div class="form-field">
-              <label for="service">How can we help?</label>
-              <select id="service" name="service" data-label="Service" required>
-                <option value="">Select a service…</option>
-                <option>Individual Tax Preparation</option>
-                <option>Business Tax Preparation</option>
-                <option>Payroll &amp; Employment Tax</option>
-                <option>Bookkeeping</option>
-                <option>Tax Planning</option>
-                <option>Life Insurance</option>
-                <option>Entity Selection &amp; Formation</option>
-                <option>IRS Audit Representation</option>
-                <option>Notary Services</option>
-                <option>Vietnamese to English Translation</option>
-                <option>Something Else</option>
-              </select>
-              <span class="field-error" aria-live="polite"></span>
-            </div>
-
-            <div class="form-field">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" data-label="Message" required></textarea>
-              <span class="field-error" aria-live="polite"></span>
-            </div>
-
-            <div class="form-field">
-              <label class="form-consent" for="consent">
-                <input type="checkbox" id="consent" name="consent" data-label="Consent" required>
-                <span>I agree to be contacted about my request. Please do not include Social
-                      Security numbers or other sensitive information in this form.</span>
-              </label>
-              <span class="field-error" aria-live="polite"></span>
-            </div>
-
-            <button class="btn btn--filled" type="submit">Send Request</button>
-            <div class="form-status" id="formStatus"></div>
-          </form>
-        </div>
-        <div class="col"></div>
+      <div class="wrap">
+        <div class="col"><div class="divider" role="presentation"></div></div>
       </div>
     </div>
   </section>
-  <!-- END OPTIONAL ADDITION -->
 
   <!-- ==================================================== 7. image -->
   <section class="section">
@@ -200,8 +134,8 @@
         <div class="col"></div>
         <div class="col">
           <figure class="figure">
-            <div class="img-slot" data-bg="contact-footer.jpg" role="img"
-                 aria-label="Dang &amp; Associates, LLC">contact-footer.jpg</div>
+            <img class="figure-img" src="assets/img/contact-footer.jpg" loading="lazy"
+                 alt="Admitted to practice before the IRS — Enrolled Agent">
           </figure>
         </div>
         <div class="col"></div>
@@ -210,13 +144,6 @@
   </section>
 
 </main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <p>&copy; <span data-year>2026</span> Dang &amp; Associates, LLC</p>
-    <p>10908 Courthouse Rd #102/137, Fredericksburg, VA 22408 &middot; (703) 791-9598</p>
-  </div>
-</footer>
 
 </body>
 </html>

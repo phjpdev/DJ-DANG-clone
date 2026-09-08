@@ -155,6 +155,91 @@ a:hover { text-decoration: underline; }
    They keep the theme's 1.6667 line-height and 12px top margin, which is
    what opens up the gaps between blocks on that page. */
 .b14 { font-size: 18.667px; color: #000; font-weight: 700; }
+
+/* Body-copy links are underlined on the live site. */
+.p a, .list a { color: var(--blue-alt); text-decoration: underline; }
+
+/* ---------------------------------------------------- heading anchors ---- */
+/* Content headings keep the original site's anchor ids. Hovering reveals a
+   copy-link icon; jumps land clear of the fixed header (the original offsets
+   its anchor blocks by the same 56px). Injected by initHeadingAnchors(). */
+[id^="h."] { scroll-margin-top: calc(var(--header-h) + 8px); }
+
+.hlink {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #757575;
+  vertical-align: middle;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease), background-color 0.15s var(--ease);
+}
+
+[id^="h."]:hover .hlink,
+.hlink:focus-visible { opacity: 1; }
+
+.hlink:hover { background: rgba(60, 64, 67, 0.08); }
+.hlink svg { width: 22px; height: 22px; }
+
+/* "Copied to clipboard" toast, bottom centre, dark — as on the live site. */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 280px;
+  max-width: calc(100vw - 32px);
+  padding: 12px 10px 12px 20px;
+  border-radius: 4px;
+  background: #202124;
+  color: #fff;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+}
+
+.toast[hidden] { display: none; }
+
+.toast span { flex: 1 1 auto; }
+
+.toast a {
+  flex: 0 0 auto;
+  color: #8ab4f8;
+  font-weight: 500;
+  text-decoration: none;
+}
+.toast a:hover { text-decoration: underline; color: #8ab4f8; }
+
+.toast button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.toast button:hover { background: rgba(255, 255, 255, 0.1); }
+.toast button svg { width: 18px; height: 18px; }
+
+/* A continuation line under a bulleted item — the Resource Center interleaves
+   bare-URL paragraphs between its lists, indented to the bullet text. */
+.list-cont { margin-left: 40px; }
 .lh138 { line-height: 1.38; margin-top: 16px; margin-bottom: 16px; }  /* 12pt margins */
 
 /* First/last child margin collapse, as .yaqOZd .zfr3Q:first-child.
@@ -251,6 +336,10 @@ a:hover { text-decoration: underline; }
   position: relative;
   width: 100%;
   padding: 8px calc(1.25% + 8px);
+  word-wrap: break-word;               /* .mGzaTb — long URLs break inside
+                                          the column instead of overflowing
+                                          into the next one. Inherited, so it
+                                          covers li and a descendants too. */
 }
 
 /* Media blocks skip .mGzaTb, so they sit 8px outboard of the copy. */
@@ -278,6 +367,12 @@ a:hover { text-decoration: underline; }
    images sit slightly left of the copy. */
 .wrap--split .col:first-child { width: 41.6666666667%; }
 .wrap--split .col:last-child  { width: 58.3333333333%; }
+
+/* 4:8 row — the Contact Us map/details section:
+     .hJDwNd-AhqUyc-II5mzb { width: 33.3333333333% }
+     .hJDwNd-AhqUyc-OiUrBf { width: 66.6666666667% } */
+.wrap--13 .col:first-child { width: 33.3333333333%; }
+.wrap--13 .col:last-child  { width: 66.6666666667%; }
 
 /* .WxWicb — a divider section. Zero section padding, and the rule itself is
    .iwQgFb { margin-top:9px; height:1px } tinted by the theme to
@@ -566,6 +661,9 @@ a:hover { text-decoration: underline; }
   background: var(--grey);
 }
 
+/* Contact Us sizes its map taller: padding-top: 84.4155844156% in the source. */
+.map-embed--tall { aspect-ratio: 100 / 84.4155844156; }
+
 .map-embed iframe {
   position: absolute;
   inset: 0;
@@ -700,6 +798,108 @@ a:hover { text-decoration: underline; }
 
   .header-inner { padding-left: 24px; }
 }
+
+/* ==========================================================================
+   Search overlay — what the header magnifier opens.
+   The live site stays on the current page: a light strip across the top
+   holds a back arrow and a centered "Search this site" box, and the page
+   underneath is dimmed. Submitting navigates to the results page.
+   Markup is injected by initSearchOverlay() in main.js.
+   ========================================================================== */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+.search-overlay[hidden] { display: none; }
+
+.search-overlay-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.search-overlay-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 80px;
+  padding: 0 16px;
+  background: #fafafa;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.1);
+}
+
+.search-overlay-back {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #3c4043;
+  cursor: pointer;
+}
+.search-overlay-back:hover { background: rgba(60, 64, 67, 0.08); }
+.search-overlay-back svg { width: 22px; height: 22px; }
+
+.search-overlay-form {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(722px, calc(100vw - 140px));
+  height: 50px;
+  padding: 0 16px;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.12);
+}
+
+.search-overlay-form svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  color: #5f6368;
+}
+
+.search-overlay-form input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 16px;
+  color: #202124;
+}
+.search-overlay-form input::placeholder { color: #80868b; }
+.search-overlay-form input::-webkit-search-cancel-button { display: none; }
+
+.search-overlay-clear {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  margin-right: -8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #5f6368;
+  cursor: pointer;
+}
+.search-overlay-clear:hover { background: rgba(60, 64, 67, 0.08); }
+.search-overlay-clear[hidden] { display: none; }
+.search-overlay-clear svg { width: 20px; height: 20px; }
 
 /* ==========================================================================
    Search page (search.html)
@@ -855,14 +1055,33 @@ mark {
   color: #70757a;
 }
 
-.search-empty {
-  margin: 24px 0 0;
-  padding: 24px;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.14);
-  font-size: 14px;
-  color: #5f6368;
+/* No-results state — rendered inside the results card. */
+.search-noresults {
+  padding: 44px 24px 60px;
+  text-align: center;
+}
+
+.search-noresults h2 {
+  margin: 0 0 34px;
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #202124;
+}
+
+.search-noresults-art {
+  display: block;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 40px;
+}
+
+.search-noresults p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #202124;
 }
 
 @media only screen and (max-width: 600px) {
