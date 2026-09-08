@@ -1,0 +1,884 @@
+/* ==========================================================================
+   Dang & Associates, LLC — faithful rebuild of the Google Sites original.
+
+   Every value below was read out of the live site's stylesheets:
+     - inline theme block on the page (colors + type scale)
+     - Google's atari.css (layout geometry)
+
+   Theme type scale (pt -> px @ 1pt = 1.3333px)
+     body   .zfr3Q   11pt / 14.67px   400   lh 1.6667   #212121   mt 12px
+     h1     .duRjpb  34pt / 45.33px   300   lh 1.2      #226e93   mt 30px  ls .5px
+     h2     .JYVBee  19pt / 25.33px   400   lh 1.4      #226e93   mt 20px
+     h3     .OmQG5e  15pt / 20px      400   lh 1.25     #212121   mt 16px
+     small  .TMjjoe   9pt / 12px            lh 1.2
+   Banner overrides (.LB7kq)
+     h1 64pt/85.33px ls 2px lh 1 mt 40px   |   h2 25pt 300 lh 1.1 mt 25px
+   ========================================================================== */
+
+/* ------------------------------------------------------------- tokens ---- */
+:root {
+  --blue:        rgb(34, 110, 147);   /* #226e93  headings, primary        */
+  --blue-alt:    rgb(30, 108, 147);   /* #1e6c93  buttons                  */
+  --blue-light:  rgb(73, 170, 212);   /* #49aad4  accents, active nav      */
+  --ink:         rgb(33, 33, 33);     /* #212121  body copy                */
+  --white:       rgb(255, 255, 255);
+  --grey:        rgb(242, 242, 242);  /* #f2f2f2                           */
+
+  --font: "Lato", Arial, sans-serif;
+
+  --wrap: 1280px;      /* .LS81yb max-width            */
+  --pad: 48px;         /* .LS81yb padding-inline       */
+  --header-h: 56px;    /* .sPG4ze section:first-child .mYVXT padding-top */
+  --banner-h: 520px;
+}
+
+/* -------------------------------------------------------------- reset ---- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;          /* guard: nothing should scroll sideways */
+}
+
+/* --------------------------------------------------------- scrollbars ---- */
+/* Copied from the live site. Google Sites declares a 16px bar early on, then
+   overrides it further down the cascade with this 9px rounded one — that
+   override is what actually renders, so only the final state is reproduced. */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+  background-color: rgba(0, 0, 0, 0);
+  -webkit-border-radius: 100px;
+}
+
+::-webkit-scrollbar-button { width: 0; height: 0; }
+
+::-webkit-scrollbar-track { background: transparent; }
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  -webkit-border-radius: 100px;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.35); }
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.45);
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* Firefox has no ::-webkit pseudo-elements; this is the closest equivalent. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 14.667px;                 /* 11pt */
+  font-weight: 400;
+  line-height: 1.6667;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; height: auto; display: block; border: 0; }
+svg { display: block; }
+
+a { color: var(--blue-alt); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+:focus-visible { outline: 2px solid var(--blue-light); outline-offset: 2px; }
+
+.skip-link {
+  position: absolute; left: 8px; top: -60px; z-index: 200;
+  padding: 10px 18px; background: var(--blue); color: #fff; font-weight: 700;
+}
+.skip-link:focus { top: 8px; text-decoration: none; }
+
+/* ---------------------------------------------------------- typography --- */
+/* Theme defaults. Google Sites emits these as .duRjpb / .JYVBee / .OmQG5e. */
+
+.h1, .h2, .h3, .p { margin: 0; }
+
+/* "ASSOCIATES,LLC" has no space after the comma, so at 64pt it is a single
+   long token. Let it break rather than push a horizontal scrollbar. */
+.h1, .h2, .h3, .p { overflow-wrap: break-word; }
+
+.h1 {
+  font-size: 45.333px;                 /* 34pt */
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  color: var(--blue);
+  margin-top: 30px;
+}
+
+.h2 {
+  font-size: 25.333px;                 /* 19pt */
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--blue);
+  margin-top: 20px;
+}
+
+.h3 {
+  font-size: 20px;                     /* 15pt */
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-top: 16px;
+}
+
+.p {
+  font-size: 14.667px;                 /* 11pt */
+  font-weight: 400;
+  line-height: 1.6667;
+  color: var(--ink);
+  margin-top: 12px;
+}
+
+/* The page's own inline overrides: body copy and sub-heads are set to 12pt,
+   pure black, and the sub-heads to Lato 700. Reproduced here verbatim. */
+.t12   { font-size: 16px; color: #000; }          /* 12pt */
+.t12 b, .b12 { font-size: 16px; color: #000; font-weight: 700; }
+
+/* Services sub-heads sit a step larger — 13.999999999999998pt in the source.
+   They keep the theme's 1.6667 line-height and 12px top margin, which is
+   what opens up the gaps between blocks on that page. */
+.b14 { font-size: 18.667px; color: #000; font-weight: 700; }
+.lh138 { line-height: 1.38; margin-top: 16px; margin-bottom: 16px; }  /* 12pt margins */
+
+/* First/last child margin collapse, as .yaqOZd .zfr3Q:first-child.
+   Scoped to TEXT elements only — the original targets .zfr3Q, not everything.
+   A bare `.col > *` here also zeroes the padding-top that gives the map its
+   aspect-ratio box, collapsing it to nothing. */
+.col > .h1:first-child,
+.col > .h2:first-child,
+.col > .h3:first-child,
+.col > .p:first-child,
+.col > .list:first-child { margin-top: 0; padding-top: 0; }
+
+.col > .h1:last-child,
+.col > .h2:last-child,
+.col > .h3:last-child,
+.col > .p:last-child,
+.col > .list:last-child { margin-bottom: 0; padding-bottom: 0; }
+
+.center { text-align: center; }
+.left   { text-align: left; }
+
+/* Contact rows: bold label sitting on a tab stop, value in regular weight. */
+.cline { display: flex; gap: 0; }
+.cline .lbl { flex: 0 0 auto; min-width: 90px; font-weight: 700; }
+.cline .val { flex: 1 1 auto; font-weight: 400; }
+.cline .val a { color: var(--blue-alt); text-decoration: underline; }
+
+/* ---------------------------------------------------------------- lists -- */
+/* .n8H08c { padding-left:20px }  .n8H08c .TYR86d { margin:6px 0 0 0 }
+   page inline: list-style square / decimal, margin-left 0, padding 0,
+   li margin-left 15pt (20px), inner p line-height 1.38 margin 12pt        */
+.list {
+  margin: 6px 0 0;
+  padding: 0 0 0 20px;
+}
+.list li {
+  margin: 6px 0 0 20px;                /* 15pt indent */
+  font-size: 16px;
+  color: #000;
+  line-height: 1.38;
+}
+.list li + li { margin-top: 16px; }
+.list--square { list-style-type: square; }
+.list--decimal { list-style-type: decimal; }
+
+/* ------------------------------------------------------------- sections -- */
+/* .yaqOZd { display:table; table-layout:fixed; width:100% }
+   .yaqOZd:not(.LB7kq):not(.WxWicb) @768+ { padding: 1.5rem 0 }            */
+.section {
+  position: relative;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  background-size: cover;
+}
+
+@media only screen and (min-width: 768px) {
+  .section:not(.section--banner):not(.section--spacer) {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* .mYVXT { display:table-cell; vertical-align:middle; width:100% } */
+.section-cell {
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+}
+
+/* .LS81yb { max-width:1280px; padding:0 48px; display:flex; flex-wrap:wrap;
+             justify-content:center }                                       */
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+/* .JNdkSc { display:inline-block; vertical-align:top; width:100% }
+   Columns sit side by side inside .wrap.                                   */
+/* Every grid width class pairs with its own inner padding, and all of them
+   resolve to the same ~14.8px on a 1184px row:
+     uQSCkd 100%    + 1.25%
+     qWD73c  50%    + 2.5%
+     wNfPc   41.67% + 3%
+     OwsYgb  58.33% + 2.1429%
+   So the gutter is uniform: 1.25% of the row, plus the 8px .mGzaTb inset
+   that text blocks carry. */
+.col {
+  position: relative;
+  width: 100%;
+  padding: 8px calc(1.25% + 8px);
+}
+
+/* Media blocks skip .mGzaTb, so they sit 8px outboard of the copy. */
+.col > .img-placeholder,
+.col > .figure,
+.col > .map-embed {
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+/* Columns are plain fractions — the gutter comes from each column's own
+   inner padding above, not from a spacer between them. */
+.wrap--2 .col { width: 50%; }
+.wrap--3 .col { width: 33.3333%; }
+
+/* .yYI8W .mGzaTb { padding:14px 8px } — used by the home two-column row */
+.wrap--pad .col { padding: 14px 8px; }
+
+/* Uneven 5:7 row, used by the team sections and the map/contact rows:
+     .hJDwNd-AhqUyc-wNfPc  { width: 41.6666666667% }   image side
+     .hJDwNd-AhqUyc-OwsYgb { width: 58.3333333333% }   text side
+   Each column carries its own inner padding (3% and 2.1428571429% of ITS
+   own width); both land on the same ~1.25% of the row, so the gutter reads
+   as uniform. The text side also keeps the 8px .mGzaTb inset, which is why
+   images sit slightly left of the copy. */
+.wrap--split .col:first-child { width: 41.6666666667%; }
+.wrap--split .col:last-child  { width: 58.3333333333%; }
+
+/* .WxWicb — a divider section. Zero section padding, and the rule itself is
+   .iwQgFb { margin-top:9px; height:1px } tinted by the theme to
+   rgba(0,0,0,.15).                                                          */
+.section--spacer { padding: 0; }
+
+.divider {
+  margin-top: 9px;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.lQAHbd .divider { background-color: rgba(255, 255, 255, 0.15); }
+
+/* --------------------------------------------------------------- banner -- */
+/* section classes on the live site: yaqOZd LB7kq cJgDec nyKByd O13XJf SBrW1
+   .O13XJf .IFuOkc:before { background:#212121; opacity:.4 }  <- dark scrim
+   .O13XJf .zfr3Q, .duRjpb { color:#fff }                                   */
+.section--banner {
+  min-height: var(--banner-h);
+  color: var(--white);
+}
+
+/* Content is centred in the full banner height — the header floats over it
+   rather than pushing it down. */
+.section--banner .section-cell { padding-top: 0; }
+
+/* Interior banners carry the title in the middle of three columns. At 30.8%
+   a title like "About Us" or "Resource Center" wraps, which the live site
+   does not do — it runs on one centred line. Drop the empty side columns and
+   let the title span the full width. */
+.section--banner .wrap--3 .col:empty { display: none; }
+
+.section--banner .wrap--3 .col {
+  width: 100%;
+  margin-left: 0;
+}
+
+/* .Nu95r { position:absolute; inset:0; overflow:hidden } */
+.banner-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* .IFuOkc — the image layer itself */
+.banner-img {
+  position: absolute;
+  inset: 0;
+  background-color: var(--blue);
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* .IFuOkc:before — #212121 at 40% */
+.banner-img::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--ink);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.section--banner .wrap { position: relative; z-index: 1; }
+
+/* .LB7kq .duRjpb { font-size:64pt; letter-spacing:2px; line-height:1; margin-top:40px } */
+.section--banner .h1 {
+  font-size: 85.333px;                 /* 64pt */
+  font-weight: 300;
+  letter-spacing: 2px;
+  line-height: 1;
+  color: var(--white);
+  margin-top: 40px;
+}
+
+/* .LB7kq .JYVBee { font-size:25pt; font-weight:300; line-height:1.1; margin-top:25px } */
+.section--banner .h2 {
+  font-size: 33.333px;                 /* 25pt */
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--white);
+  margin-top: 25px;
+}
+
+.section--banner .p { color: var(--white); }
+
+/* --------------------------------------------------------------- header -- */
+/* Transparent, laid over the banner. .Zjiec padding-left:48px,
+   .PsKE7e { color:#fff; font-size:12pt; font-weight:300 }                  */
+/* The live site renders this as position:fixed; width:100%; z-index:100 —
+   transparent while it sits over the banner, then filling with the theme's
+   .zDUgLc background rgba(33,33,33,1) once the page scrolls. */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  min-height: var(--header-h);
+  background-color: transparent;
+  transition: background-color 0.2s var(--ease);
+}
+
+.site-header.is-stuck { background-color: rgb(33, 33, 33); }
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: none;
+  padding: 6px 24px 6px var(--pad);
+}
+
+.brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.brand:hover { text-decoration: none; }
+
+.brand-logo { height: 44px; width: auto; }
+
+/* Placeholder while assets/img/logo.png is absent. */
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* .Zjiec — site title. Hidden on the live site (logo only), kept for a11y. */
+.brand-title {
+  font-size: 25.333px;                 /* 19pt */
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1.3;
+  color: var(--white);
+}
+
+.header-right { display: flex; align-items: center; gap: 6px; }
+
+.site-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* .PsKE7e { color:#fff; font-family:Lato; font-size:12pt; font-weight:300 }
+   .hDrhEe { padding-top:11.5px; padding-bottom:11.5px } */
+.site-nav a {
+  display: block;
+  padding: 11.5px 14px;
+  font-size: 16px;                     /* 12pt */
+  font-weight: 300;
+  line-height: 1.21;                   /* .IKA38e */
+  color: var(--white);
+  white-space: nowrap;
+  transition: color 0.18s var(--ease);
+}
+
+.site-nav a:hover { color: var(--white); text-decoration: none; }
+
+/* Current page: white while the header is transparent over the banner
+   (.GBy4H .lhZOrc { color: rgba(255,255,255,1) }), switching to the accent
+   once the bar goes dark (.lhZOrc { color: rgba(73,170,212,1) }). */
+.site-nav a[aria-current="page"] { color: var(--white); font-weight: 400; }
+
+.site-header.is-stuck .site-nav a[aria-current="page"] { color: var(--blue-light); }
+.site-header.is-stuck .site-nav a:hover { color: var(--blue-light); }
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+}
+.icon-btn:hover { background: rgba(255, 255, 255, 0.12); }
+.icon-btn svg { width: 22px; height: 22px; }
+
+.nav-toggle { display: none; }
+
+/* ------------------------------------------------------------- controls -- */
+/* .QmpIrf filled | .xkUom outline — 11pt Lato.
+   On dark sections they invert to white bg / blue text.                     */
+.btn {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 24px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14.667px;                 /* 11pt */
+  line-height: normal;
+  cursor: pointer;
+}
+.btn:hover { text-decoration: none; opacity: 0.88; }
+
+.btn--filled { background: var(--blue-alt); border-color: var(--white); color: var(--white); }
+.btn--outline { background: transparent; border-color: var(--blue-alt); color: var(--blue-alt); }
+
+.section--banner .btn--filled { background: var(--white); border-color: var(--blue); color: var(--blue); }
+.section--banner .btn--outline { border-color: var(--grey); color: var(--grey); }
+
+/* --------------------------------------------------------------- images -- */
+/* Every image on the live site is served from Google's CDN, which refuses
+   direct requests (403). Slots keep the original footprint; drop the real
+   files into assets/img/ and main.js swaps them in. See img/README.md.     */
+.figure { margin: 12px 0 0; }
+
+/* Images render at their natural size, capped to the column — the same way
+   Google Sites places them. No forced aspect ratio, so a 604x159 badge stays
+   a badge instead of being stretched into a 16:9 block. */
+.figure img,
+.figure-img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* An empty image widget. The live About page ships five of these — Google
+   Sites renders an unfilled image slot as a dashed outline over a faint wash:
+     .Y8Sxfc { background-color: rgba(0,0,0,.03);
+               outline: 2px dashed rgba(0,0,0,.1);
+               position: absolute; inset: 0 }
+   sized by a spacer <div style="padding-top: 56.1797761839%">.
+   `outline` rather than `border`, so it draws outside the box and adds no
+   layout width. */
+.img-placeholder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 100 / 56.1797761839;
+  margin-top: 12px;
+}
+
+.img-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  outline: 2px dashed rgba(0, 0, 0, 0.1);
+}
+
+/* Shown only when a file is genuinely missing. Deliberately short so absent
+   assets do not inflate page height. */
+.img-slot {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 160px;
+  padding: 12px;
+  background: var(--grey);
+  color: rgba(33, 33, 33, 0.45);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ----------------------------------------------------------- map embed --- */
+/* The live site drops a Google Maps iframe into the left column of the
+   contact row (.YMEQtf { position:absolute; inset:0; width:100%; height:100% }). */
+/* The live site sizes the map with an aspect-ratio box:
+   <div jsname="WXxXjd" style="padding-top: 54.0948275862%"> — height follows
+   the column width rather than being fixed. */
+.map-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 100 / 54.0948275862;   /* same ratio, but immune to a stray
+                                          padding-top:0 collapsing the box */
+  margin: 12px 0 0;
+  overflow: hidden;
+  background: var(--grey);
+}
+
+.map-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------- form --- */
+/* Not present on the live site — an addition. Delete the block marked
+   "OPTIONAL" in contact-us.html to return the page to a pure clone.         */
+.form { margin-top: 12px; }
+.form-field { margin-bottom: 14px; }
+
+.form-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14.667px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 14.667px;
+  color: var(--ink);
+  background: #fff;
+}
+
+.form-field textarea { min-height: 120px; resize: vertical; }
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--blue-light);
+  box-shadow: 0 0 0 3px rgba(73, 170, 212, 0.18);
+}
+
+.form-field input[aria-invalid="true"],
+.form-field select[aria-invalid="true"],
+.form-field textarea[aria-invalid="true"] { border-color: #c0392b; }
+
+.field-error { display: none; margin-top: 4px; font-size: 13px; color: #c0392b; }
+.field-error.is-visible { display: block; }
+
+.form-consent { display: flex; gap: 9px; align-items: flex-start; font-size: 14px; font-weight: 400; }
+.form-consent input { width: 16px; height: 16px; margin-top: 3px; flex: 0 0 auto; }
+
+.form-status { display: none; margin-top: 14px; padding: 12px 14px; border-radius: 3px; font-size: 14.667px; }
+.form-status.is-visible { display: block; }
+.form-status.is-success { background: #e8f4ee; border: 1px solid #9bc9b0; color: #1d6b48; }
+.form-status.is-error { background: #fbecea; border: 1px solid #e0a49c; color: #96271c; }
+
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* --------------------------------------------------------------- footer -- */
+/* The live site shows only the Google Sites bar. This keeps the same
+   footprint with the site's own attribution instead.                        */
+.site-footer {
+  padding: 18px 0;
+  border-top: 1px solid rgba(33, 33, 33, 0.12);
+  background: var(--white);
+}
+
+.site-footer .wrap { justify-content: space-between; align-items: center; gap: 8px; }
+
+.site-footer p {
+  margin: 0;
+  font-size: 12px;                     /* 9pt, .TMjjoe */
+  line-height: 1.2;
+  color: rgba(33, 33, 33, 0.6);
+}
+
+/* ---------------------------------------------------------- responsive --- */
+/* Mirrors the theme's own breakpoints exactly. */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+  .h1 { font-size: 38.667px; }         /* 29pt */
+  .h2 { font-size: 22.667px; }         /* 17pt */
+  .h3 { font-size: 18.667px; }         /* 14pt */
+  .section--banner .h1 { font-size: 70.667px; }   /* 53pt */
+  .section--banner .h2 { font-size: 29.333px; }   /* 22pt */
+}
+
+@media only screen and (max-width: 479px) {
+  .h1 { font-size: 32px; }             /* 24pt */
+  .h2 { font-size: 20px; }             /* 15pt */
+  .h3 { font-size: 17.333px; }         /* 13pt */
+  .section--banner .h1 { font-size: 53.333px; }   /* 40pt */
+  .section--banner .h2 { font-size: 25.333px; }   /* 19pt */
+}
+
+@media only screen and (max-width: 767px) {
+  :root { --pad: 24px; --banner-h: 380px; }
+
+  .wrap--2 .col,
+  .wrap--3 .col { width: 100%; }
+
+  .nav-toggle {
+    display: grid;
+    place-items: center;
+    width: 40px; height: 40px;
+    padding: 0; border: 0; border-radius: 50%;
+    background: transparent; color: var(--white); cursor: pointer;
+  }
+  .nav-toggle span {
+    display: block; width: 20px; height: 2px; margin: 3px 0;
+    background: currentColor; transition: transform .25s, opacity .2s;
+  }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+  .site-nav {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    display: none;
+    padding: 8px 24px 16px;
+    background: rgba(33, 33, 33, 0.96);
+  }
+  .site-nav.is-open { display: block; }
+  .site-nav ul { flex-direction: column; align-items: stretch; }
+  .site-nav a { padding: 12px 4px; font-size: 16px; }
+
+  .header-inner { padding-left: 24px; }
+}
+
+/* ==========================================================================
+   Search page (search.html)
+   Reproduces the Google Sites search view the magnifier used to open:
+   grey backdrop, floating search bar, white results card.
+   ========================================================================== */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* terms carried over from a search result, marked by initHighlight() */
+mark {
+  background: rgba(73, 170, 212, 0.34);
+  color: inherit;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+
+.search-page {
+  min-height: 100vh;
+  background: #e9eaec;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+.search-shell {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 22px 16px 64px;
+}
+
+.search-back {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  margin-top: 6px;
+  padding: 0; border: 0; border-radius: 50%;
+  background: transparent;
+  color: #3c4043;
+  cursor: pointer;
+}
+.search-back:hover { background: rgba(60, 64, 67, 0.08); }
+.search-back svg { width: 22px; height: 22px; }
+
+.search-main {
+  flex: 1 1 auto;
+  max-width: 696px;
+  margin: 0 auto;
+}
+
+/* ------------------------------------------------------------ search bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 56px;
+  padding: 0 8px 0 16px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.14);
+}
+
+.search-bar-icon {
+  display: grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  flex: 0 0 auto;
+  color: #5f6368;
+}
+.search-bar-icon svg { width: 21px; height: 21px; }
+
+.search-bar input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 16px;
+  color: #202124;
+}
+.search-bar input:focus { outline: none; }
+.search-bar input::placeholder { color: #80868b; }
+.search-bar input::-webkit-search-cancel-button { display: none; }
+
+.search-clear {
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  flex: 0 0 auto;
+  padding: 0; border: 0; border-radius: 50%;
+  background: transparent;
+  color: #5f6368;
+  cursor: pointer;
+}
+.search-clear:hover { background: rgba(60, 64, 67, 0.08); }
+.search-clear svg { width: 20px; height: 20px; }
+
+/* --------------------------------------------------------- results card */
+.search-card {
+  margin-top: 24px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.14);
+  overflow: hidden;
+}
+
+.search-card-head {
+  margin: 0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #5f6368;
+}
+
+.search-result {
+  display: block;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  color: inherit;
+  text-decoration: none;
+}
+.search-result:last-child { border-bottom: 0; }
+.search-result:hover { background: #f8f9fa; text-decoration: none; }
+
+.search-result-title {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 17px;
+  line-height: 1.4;
+  color: #1967d2;
+}
+.search-result:hover .search-result-title { text-decoration: underline; }
+
+.search-result-snippet {
+  display: block;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #3c4043;
+}
+.search-result-snippet b { font-weight: 700; color: #202124; }
+
+.search-result-meta {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #70757a;
+}
+
+.search-empty {
+  margin: 24px 0 0;
+  padding: 24px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.14);
+  font-size: 14px;
+  color: #5f6368;
+}
+
+@media only screen and (max-width: 600px) {
+  .search-shell { padding: 12px 8px 48px; }
+  .search-back { width: 40px; height: 40px; margin-top: 8px; }
+  .search-card-head, .search-result { padding-left: 16px; padding-right: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+@media print {
+  .site-header, .nav-toggle, .icon-btn { display: none !important; }
+  .section--banner { min-height: 0; color: #000; }
+  .section--banner .h1 { color: #000; font-size: 32px; }
+  .banner-media { display: none; }
+  a { color: #000; text-decoration: underline; }
+}
